@@ -31,7 +31,8 @@ def scrape_books():
         product.append([Name,Price])
 
     df=pd.DataFrame(product,columns=["Name","Price"])
+
     return render_template("index.html",table=df.to_html(index=False,classes="table table-striped"))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False,host="0.0.0.0",port=3000)
