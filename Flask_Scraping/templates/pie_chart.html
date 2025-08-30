@@ -1,0 +1,188 @@
+<!--<img src="{{ chart_url}}" alt="data"/>-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pie Chart</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        cursor: none;
+      }
+
+      body {
+        height: 100vh;
+        background: #0a0a1a;
+        color: white;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        transition: transform 0.2s ease-out;
+        perspective: 1000px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        position: relative;
+      }
+
+      /* Mouse Tracer Effect */
+      .mouse-tracer {
+        position: fixed;
+        width: 15px;
+        height: 15px;
+        background: radial-gradient(circle, #ff66ff, #4ddbff);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1000;
+        opacity: 0.8;
+        filter: blur(5px);
+        transform: translate(-50%, -50%);
+        transition: transform 0.05s ease-out;
+      }
+
+      /* Click Explosion Effect */
+      .click-effect {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background: radial-gradient(circle, hwb(192 30% 0%) 30% 0%), #ff66ff,
+          transparent);
+        border-radius: 50%;
+        opacity: 0;
+        transform: scale(0);
+        pointer-events: none;
+        z-index: 1001;
+      }
+
+      /* Animation for click effect */
+      @keyframes explosion {
+        0% {
+          transform: scale(0);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.5);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+
+      /* Particle background */
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .container {
+        max-width: 900px;
+        width: 100%;
+        text-align: center;
+        z-index: 1; /* Ensure content is on top of background */
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        background: rgba(77, 219, 255, 0.2);
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+      }
+      .back-button:hover {
+        color: #fff;
+        text-shadow: 0 0 10px #4ddbff;
+        background: rgba(77, 219, 255, 0.4);
+        border-color: #4ddbff;
+      }
+    </style>
+  </head>
+  <body>
+    <audio
+      id="clickSound"
+      src="https://assets.mixkit.co/sfx/preview/mixkit-ding-1481.mp3"
+      preload="auto"
+    ></audio>
+
+    <div class="mouse-tracer"></div>
+
+    <div class="click-effect"></div>
+
+    <div id="particles-js"></div>
+
+    <a href="scrape_1" class="back-button">← Back</a>
+    <div class="container">
+      <img src="{{ chart_url}}" alt="data" />
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+      particlesJS("particles-js", {
+        particles: {
+          number: { value: 80 },
+          size: { value: 3 },
+          move: { speed: 2 },
+          line_linked: { enable: true, distance: 150, color: '#00f7ff' },
+        },
+      });
+
+      const clickSound = document.getElementById('clickSound');
+      const mouseTracer = document.querySelector('.mouse-tracer');
+      const clickEffect = document.querySelector('.click-effect');
+      const body = document.body;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseTracer.style.left = `${e.clientX}px`;
+        mouseTracer.style.top = `${e.clientY}px`;
+      });
+
+      window.addEventListener('click', (e) => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+
+        const newClick = document.createElement('div');
+        newClick.className = 'click-effect';
+        newClick.style.left = `${e.clientX}px`;
+        newClick.style.top = `${e.clientY}px`;
+        body.appendChild(newClick);
+        newClick.style.animation = 'explosion 0.5s forwards';
+        setTimeout(() => {
+          newClick.remove();
+        }, 500);
+      });
+    </script>
+  </body>
+</html>

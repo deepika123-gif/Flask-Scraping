@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepika | CodroidHub</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            cursor: none;
+        }
+
+        body {
+            height: 100vh;
+            background: #0a0a1a;
+            color: white;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            transition: transform 0.2s ease-out;
+            perspective: 1000px;
+        }
+
+        /* Mouse Trace Effect */
+        .mouse-tracer {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #ff66ff, #4ddbff);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.8;
+            filter: blur(5px);
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease-out;
+        }
+
+        /* Click Explosion Effect */
+        .click-effect {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, hwb(192 30% 0%) 30% 0%), #ff66ff, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        /* Animation for click effect */
+        @keyframes explosion {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Particle background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Branding (Top Left) */
+        .branding {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            text-align: left;
+        }
+
+        .branding .company {
+            font-size: 28px;
+            color: #4ddbff;
+            font-weight: 800;
+            text-shadow: 0 0 10px #4ddbff;
+        }
+        
+        .branding .name {
+            font-size: 48px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 20px #ff66ff, 0 0 40px #4ddbff;
+            margin-top: 20px;
+        }
+        
+        /* Data Science Title */
+        .big-title {
+            font-size: 50px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: none;
+            letter-spacing: -2px;
+            margin-bottom: 50px;
+            animation: glitch-effect-light 3s infinite alternate;
+            text-align: center;
+        }
+        
+        /* Light Glitch Animation */
+        @keyframes glitch-effect-light {
+            0% { transform: skewX(0deg); }
+            50% { transform: skewX(5deg); opacity: 0.05; }
+            100% { transform: skewX(0deg); }
+        }
+
+        /* Navigation */
+        nav {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li {
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+            padding: 8px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 5px;
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+        }
+        
+        nav ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-weight: bold; /* This makes the text bold */
+        }
+
+        nav ul li:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #4ddbff;
+            background: rgba(77, 219, 255, 0.2);
+            border-color: #4ddbff;
+        }
+
+        nav ul li:hover a {
+            color: #fff;
+        }
+
+        /* Center container */
+        .center {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .socials {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .socials a {
+            font-size: 22px;
+            color: white;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .socials a:hover {
+            color: #4ddbff;
+            text-shadow: 0 0 15px #4ddbff;
+            transform: scale(1.2);
+        }
+
+        /* Updated style for the explore button with new colors */
+        .explore {
+            background: linear-gradient(45deg, #00C6FF, #0072FF);
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.5);
+            transition: 0.3s;
+        }
+
+        .explore:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 198, 255, 0.8);
+        }
+
+        /* About Me */
+        .about {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 50%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(77, 219, 255, 0.2);
+        }
+
+        .about h2 {
+            margin-bottom: 10px;
+            font-size: 24px;
+            color: #4ddbff;
+            text-shadow: 0 0 10px #4ddbff;
+        }
+
+        .about p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #ddd;
+        }
+        
+        /* New styling for bottom-left socials */
+        .bottom-socials {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 999;
+        }
+
+        .bottom-socials a {
+            font-size: 28px;
+            color: white;
+            transition: 0.3s;
+            text-decoration: none;
+            text-shadow: 0 0 10px rgba(77, 219, 255, 0.5);
+        }
+
+        .bottom-socials a:hover {
+            color: #4ddbff;
+            transform: scale(1.2);
+            text-shadow: 0 0 20px #4ddbff;
+        }
+        
+        .explore-button-link {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-ding-1481.mp3" preload="auto"></audio>
+
+    <div class="mouse-tracer"></div>
+
+    <div class="click-effect"></div>
+
+    <div id="particles-js"></div>
+
+    <div class="branding">
+        <h3 class="company">Deepika Gondia</h3>
+        <h1 class="name"></h1>
+    </div>
+
+    <div class="center">
+        <h1 class="big-title">
+            <span>Job Oriented Training</span><br>
+            <span>in</span><br>
+            <span>Data Science</span>
+        </h1>
+        <a href="/explore" class="explore-button-link">
+            <button class="explore"> Explore More...</button>
+        </a>
+        <div class="socials">
+            <a href="https://github.com/yourgithub" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://linkedin.com/in/yourlinkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="mailto:youremail@example.com"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="/aboutUs">About Me</a></li>
+            <li><a href="/codroidhub" target="_blank">CodroidHub</a></li>
+            <li><a href="/blogs">Blogs</a></li>
+            <li><a href="https://github.com/deepika123-gif" target="_blank">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/deepika-gondia-76120b276/" target="_blank">LinkedIn</a></li>
+        </ul>
+    </nav>
+
+    <div class="about">
+        <h2>About Me</h2>
+        <p>I'm Deepika – Data Scientist & Web Developer. I build futuristic dashboards, AI-powered models, and immersive web apps with clean design and strong backend logic.</p>
+    </div>
+
+    <div class="bottom-socials">
+        <a href="https://github.com/yourgithub" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://linkedin.com/in/yourlinkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:youremail@example.com"><i class="fas fa-envelope"></i></a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80 },
+                "size": { "value": 3 },
+                "move": { "speed": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#00f7ff" }
+            }
+        });
+
+        const clickSound = document.getElementById('clickSound');
+        const mouseTracer = document.querySelector('.mouse-tracer');
+        const clickEffect = document.querySelector('.click-effect');
+        const body = document.body;
+        const interactiveElements = document.querySelectorAll('.explore-button-link, li, .socials a, .bottom-socials a');
+
+        window.addEventListener('mousemove', e => {
+            mouseTracer.style.left = `${e.clientX}px`;
+            mouseTracer.style.top = `${e.clientY}px`;
+            
+            const rotationY = (e.clientX - window.innerWidth / 2) * 0.005;
+            const rotationX = (e.clientY - window.innerHeight / 2) * -0.005;
+            body.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            interactiveElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const elX = rect.left + rect.width / 2;
+                const elY = rect.top + rect.height / 2;
+                const dx = e.clientX - elX;
+                const dy = e.clientY - elY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    const force = (150 - distance) / 150;
+                    const offsetX = -dx * force * 0.5;
+                    const offsetY = -dy * force * 0.5;
+                    el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                } else {
+                    el.style.transform = 'translate(0, 0)';
+                }
+            });
+        });
+        
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        window.addEventListener('click', e => {
+            clickSound.currentTime = 0;
+            clickSound.play();
+
+            const newClick = document.createElement('div');
+            newClick.className = 'click-effect';
+            newClick.style.left = `${e.clientX}px`;
+            newClick.style.top = `${e.clientY}px`;
+            body.appendChild(newClick);
+            newClick.style.animation = 'explosion 0.5s forwards';
+            setTimeout(() => {
+                newClick.remove();
+            }, 500);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollValue = window.scrollY;
+            const scaleFactor = 1 + scrollValue * 0.0005; 
+            document.body.style.transform = `scale(${scaleFactor})`;
+        });
+    </script>
+
+</body>
+</html>

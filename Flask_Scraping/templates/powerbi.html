@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboards - CodroidHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            background: #0a0a1a;
+        }
+
+        /* ==== BACKGROUND PARTICLES LAYER ==== */
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a30);
+        }
+
+        header {
+            background: rgba(20, 20, 40, 0.7);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        header .logo {
+            font-weight: 800;
+            font-size: 20px;
+            color: #4ddbff;
+            text-shadow: 0 0 10px #00eaff;
+        }
+        header nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #ddd;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        header nav a:hover { color: #00f7ff; }
+
+        /* New Back Button Styles */
+        .back-btn {
+            background: linear-gradient(45deg, #ff00ff, #00eaff);
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 10px rgba(255,0,255,0.5);
+            margin-right: auto;
+        }
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,0,255,0.8);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 60px 20px;
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            background: linear-gradient(90deg, #00eaff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0,255,255,0.4);
+        }
+
+        .subject-row {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 80px;
+            position: relative;
+        }
+        .subject-row:nth-child(even) { flex-direction: row-reverse; }
+
+        .subject-card, .description-card {
+            flex: 1;
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .subject-card:hover, .description-card:hover {
+            transform: translateY(-12px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 0 15px 40px rgba(0,255,255,0.4);
+        }
+
+        .subject-card h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #00eaff;
+            text-shadow: 0 0 15px #00f7ff;
+        }
+
+        .description-card p {
+            color: #bbb;
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .description-card a {
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(45deg, #00C6FF, #0072FF);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+            box-shadow: 0 0 15px rgba(0,114,255,0.5);
+        }
+        .description-card a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0,198,255,0.8);
+        }
+
+        .subject-row::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00eaff, transparent);
+            opacity: 0.3;
+        }
+
+        @media(max-width: 900px) {
+            .subject-row { flex-direction: column !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<header>
+    <a href="javascript:history.back()" class="back-btn">← Back</a>
+    <div class="logo">CodroidHub</div>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="/aboutUs">About Us</a>
+        <a href="/aboutCodroid" target="_blank">CodroidHub</a>
+        <a href="https://github.com/deepika123-gif" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/deepika-gondia-76120b276/" target="_blank">LinkedIn</a>
+        <a href="/blogs">Blogs</a>
+    </nav>
+</header>
+
+<main>
+    <h1>Dashboards</h1>
+
+    <div class="subject-row">
+        <div class="subject-card" onclick="window.location.href='static/IRIS.png';">
+            <h2>🌸 IRIS</h2>
+        </div>
+        <div class="description-card">
+            <p>The IRIS dataset includes three iris species with 50 samples each. It’s often used to demonstrate classification problems, as one species is linearly separable while the other two overlap.</p>
+            <a href="/iris_dashboard">Learn More</a>
+        </div>
+    </div>
+
+    <div class="subject-row">
+        <div class="subject-card" onclick="window.location.href='static/TITANIC.png';">
+            <h2>🚢 TITANIC</h2>
+        </div>
+        <div class="description-card">
+            <p>The Titanic dataset is a classic machine learning dataset used to predict survival chances of passengers based on age, class, gender and more.</p>
+            <a href="/titanic_deshboard">Learn More</a>
+        </div>
+    </div>
+
+    <div class="subject-row">
+        <div class="subject-card" onclick="window.location.href='static/hr analytics.png';">
+            <h2>👩‍💼 HR Analytics</h2>
+        </div>
+        <div class="description-card">
+            <p>The HR Analytics dataset helps companies predict employee attrition. It explores satisfaction, performance, promotions and salary to understand workforce trends.</p>
+            <a href="/hr_deshboard">Learn More</a>
+        </div>
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+<script>
+particlesJS("particles-js", {
+    "particles": {
+        "number": { "value": 90 },
+        "color": { "value": "#00eaff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3 },
+        "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#00eaff",
+            "opacity": 0.3,
+            "width": 1
+        },
+        "move": { "enable": true, "speed": 3 }
+    },
+    "interactivity": {
+        "events": { "onhover": { "enable": true, "mode": "repulse" } }
+    }
+});
+</script>
+</body>
+</html>

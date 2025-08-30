@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Explore More</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a1a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            cursor: none;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            transition: transform 0.2s ease-out;
+            perspective: 1000px;
+        }
+
+        /* Mouse Trace Effect */
+        .mouse-tracer {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #ff00ff, #00e5ff);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.8;
+            filter: blur(5px);
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease-out;
+        }
+
+        /* Click Explosion Effect */
+        .click-effect {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #00e5ff, #ff00ff, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        @keyframes explosion {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        header {
+            background: #1a1a30;
+            padding: 15px 30px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-radius: 0 0 12px 12px;
+        }
+        header .logo {
+            font-weight: bold;
+            font-size: 24px;
+            color: #4ddbff;
+            text-shadow: 0 0 10px #4ddbff;
+            margin-left: auto;
+        }
+        header nav {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        header nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #ddd;
+            font-weight: 500;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        header nav a:hover {
+            color: #00f7ff;
+            transform: scale(1.1);
+        }
+
+        /* New User Profile and Back Button Styles (Top-Left) */
+        .user-profile-left {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            gap: 15px;
+        }
+        .user-profile-left p {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+        .user-profile-left .back-btn {
+            background: linear-gradient(45deg, #ff00ff, #00eaff);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 10px rgba(255,0,255,0.5);
+        }
+        .user-profile-left .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,0,255,0.8);
+        }
+
+        main {
+            flex: 1;
+            padding: 40px 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 30px;
+            color: #4ddbff;
+            text-shadow: 0 0 15px #4ddbff;
+        }
+
+        /* 🔹 Home Button */
+        .explore {
+            background: linear-gradient(45deg, #00C6FF, #0072FF);
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.5);
+            transition: 0.3s;
+        }
+        .explore:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 198, 255, 0.8);
+        }
+        .explore-button-link {
+            text-decoration: none;
+        }
+
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .subject-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .subject-card, .description-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .subject-card:hover, .description-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,247,255,0.4);
+        }
+
+        .subject-card img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+
+        .subject-card h2 {
+            font-size: 24px;
+            color: hwb(192 30% 0%);
+            text-shadow: 0 0 10px hwb(192 30% 0%);
+        }
+
+        .description-card p {
+            font-size: 14px;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .description-card a {
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(45deg, #00C6FF, #0072FF);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.5);
+            margin-top: auto;
+        }
+
+        .description-card a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 198, 255, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            header nav a {
+                margin-left: 12px;
+                font-size: 14px;
+            }
+            h1 {
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+            .subject-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .subject-card, .description-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-ding-1481.mp3" preload="auto"></audio>
+    <div class="mouse-tracer"></div>
+    <div class="click-effect"></div>
+    <div id="particles-js"></div>
+
+    <header>
+        <div class="user-profile-left">
+            <a href="javascript:history.back()" class="back-btn">← Back</a>
+        </div>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="/aboutUs">About Us</a>
+            <a href="/codroidhub" target="_blank">CodroidHub</a>
+            <a href="https://github.com/deepika123-gif" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/deepika-gondia-76120b276/" target="_blank">LinkedIn</a>
+            <a href="/blogs">Blogs</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Explore More</h1>
+
+        
+
+        <div class="content-container">
+            <div class="subject-row">
+                <div class="subject-card" onclick="window.location.href='/scraping';">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4423/4423446.png" alt="Web Scraping Icon">
+                    <h2>Web Scraping</h2>
+                </div>
+                <div class="description-card">
+                    <p>Learn how to collect and analyze data from websites using Python and automation tools.</p>
+                    <a href="/scraping">Learn More</a>
+                </div>
+            </div>
+
+            <div class="subject-row">
+                <div class="subject-card" onclick="window.location.href='/dataScience';">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1163/1163624.png" alt="Data Science Icon">
+                    <h2>Data Science</h2>
+                </div>
+                <div class="description-card">
+                    <p>Master data analysis, visualization, and machine learning techniques to solve real-world problems.</p>
+                    <a href="/dataScience">Learn More</a>
+                </div>
+            </div>
+
+            <div class="subject-row">
+                <div class="subject-card" onclick="window.location.href='/powerbi';">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2910/2910768.png" alt="Power BI Icon">
+                    <h2>Power BI</h2>
+                </div>
+                <div class="description-card">
+                    <p>Create powerful, interactive dashboards and reports to turn raw data into insights.</p>
+                    <a href="/powerbi">Learn More</a>
+                </div>
+            </div>
+
+            <div class="subject-row">
+                <div class="subject-card" onclick="window.location.href='/AIML';">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="AI/ML Icon">
+                    <h2>AI / Machine Learning</h2>
+                </div>
+                <div class="description-card">
+                    <p>Explore algorithms and techniques that enable machines to learn and make decisions.</p>
+                    <a href="/AIML">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Particles.js init
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80 },
+                "size": { "value": 3 },
+                "move": { "speed": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#00f7ff" }
+            }
+        });
+
+        const clickSound = document.getElementById('clickSound');
+        const mouseTracer = document.querySelector('.mouse-tracer');
+        const body = document.body;
+        const interactiveElements = document.querySelectorAll('header nav a, .subject-card, .description-card, .description-card a, .explore');
+
+        window.addEventListener('mousemove', e => {
+            mouseTracer.style.left = `${e.clientX}px`;
+            mouseTracer.style.top = `${e.clientY}px`;
+
+            const rotationY = (e.clientX - window.innerWidth / 2) * 0.005;
+            const rotationX = (e.clientY - window.innerHeight / 2) * -0.005;
+            body.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            interactiveElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const elX = rect.left + rect.width / 2;
+                const elY = rect.top + rect.height / 2;
+                const dx = e.clientX - elX;
+                const dy = e.clientY - elY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 150) {
+                    const force = (150 - distance) / 150;
+                    const offsetX = -dx * force * 0.5;
+                    const offsetY = -dy * force * 0.5;
+                    el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                } else {
+                    el.style.transform = 'translate(0, 0)';
+                }
+            });
+        });
+
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        window.addEventListener('click', e => {
+            clickSound.currentTime = 0;
+            clickSound.play();
+
+            const newClick = document.createElement('div');
+            newClick.className = 'click-effect';
+            newClick.style.left = `${e.clientX}px`;
+            newClick.style.top = `${e.clientY}px`;
+            body.appendChild(newClick);
+            newClick.style.animation = 'explosion 0.5s forwards';
+            setTimeout(() => newClick.remove(), 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Scraping - CodroidHub</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        cursor: none;
+      }
+
+      body {
+        height: 100vh;
+        background: #0a0a1a;
+        color: white;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        transition: transform 0.2s ease-out;
+        perspective: 1000px;
+        /* New: for page transition */
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+      }
+
+      .page-transition {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+
+      /* Mouse Tracer Effect */
+      .mouse-tracer {
+        position: fixed;
+        width: 15px;
+        height: 15px;
+        background: radial-gradient(circle, #ff66ff, #4ddbff);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1000;
+        opacity: 0.8;
+        filter: blur(5px);
+        transform: translate(-50%, -50%);
+        transition: transform 0.05s ease-out;
+      }
+
+      /* Click Explosion Effect */
+      .click-effect {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background: radial-gradient(circle, hwb(192 30% 0%) 30% 0%), #ff66ff,
+          transparent);
+        border-radius: 50%;
+        opacity: 0;
+        transform: scale(0);
+        pointer-events: none;
+        z-index: 1001;
+      }
+
+      /* Animation for click effect */
+      @keyframes explosion {
+        0% {
+          transform: scale(0);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.5);
+          opacity: 0.8;
+        }
+        100% {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+
+      /* Particle background */
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      /* Navigation */
+      nav {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+      }
+
+      nav ul li {
+        cursor: pointer;
+        font-weight: 500;
+        transition: 0.3s;
+        padding: 8px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        transform-style: preserve-3d;
+        transform: translateZ(0);
+      }
+
+      nav ul li a {
+        color: #ccc;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      nav ul li:hover {
+        color: #fff;
+        text-shadow: 0 0 10px #4ddbff;
+        background: rgba(77, 219, 255, 0.2);
+        border-color: #4ddbff;
+      }
+
+      nav ul li:hover a {
+        color: #fff;
+      }
+
+      /* Back Button */
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 30px;
+        padding: 8px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        background: rgba(77, 219, 255, 0.2);
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+      }
+
+      .back-button:hover {
+        color: #fff;
+        text-shadow: 0 0 10px #4ddbff;
+        background: rgba(77, 219, 255, 0.4);
+        border-color: #4ddbff;
+      }
+
+      /* Main content */
+      main {
+        max-width: 1200px;
+        margin: auto;
+        padding: 60px 20px;
+        position: relative;
+        z-index: 1;
+        padding-top: 100px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 40px;
+        margin-bottom: 30px;
+        color: #fff;
+        text-shadow: 0 0 20px #ff66ff, 0 0 40px #4ddbff;
+      }
+
+      /* New styles for alternating rows */
+      .subject-row {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        margin-bottom: 80px;
+        position: relative;
+      }
+
+      .subject-row:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+
+      .subject-card,
+      .description-card {
+        flex: 1;
+        padding: 40px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+      }
+
+      .subject-card:hover,
+      .description-card:hover {
+        transform: translateY(-12px) rotateX(5deg) rotateY(-5deg);
+        box-shadow: 0 15px 40px rgba(0, 255, 255, 0.4);
+      }
+
+      .subject-card {
+        text-align: center;
+      }
+
+      .subject-card img {
+        width: 70px;
+        margin-bottom: 15px;
+        filter: invert(1);
+      }
+
+      .subject-card h2 {
+        font-size: 28px;
+        color: #4ddbff;
+        text-shadow: 0 0 15px #4ddbff;
+      }
+
+      .description-card p {
+        color: #bbb;
+        font-size: 16px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .description-card a {
+        text-decoration: none;
+        color: #fff;
+        background: linear-gradient(45deg, #ff66ff, #4ddbff);
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: inline-block;
+        box-shadow: 0 0 15px rgba(255, 102, 255, 0.5);
+      }
+
+      .description-card a:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(77, 219, 255, 0.8);
+      }
+
+      .subject-row::after {
+        content: '';
+        position: absolute;
+        bottom: -40px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #4ddbff, transparent);
+        opacity: 0.3;
+      }
+
+      @media (max-width: 900px) {
+        .subject-row {
+          flex-direction: column !important;
+        }
+      }
+      /* New styling for bottom-left socials */
+      .bottom-socials {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        z-index: 999;
+      }
+
+      .bottom-socials a {
+        font-size: 28px;
+        color: white;
+        transition: 0.3s;
+        text-decoration: none;
+        text-shadow: 0 0 10px rgba(77, 219, 255, 0.5);
+      }
+
+      .bottom-socials a:hover {
+        color: #4ddbff;
+        transform: scale(1.2);
+        text-shadow: 0 0 20px #4ddbff;
+      }
+    </style>
+  </head>
+  <body>
+    <audio
+      id="clickSound"
+      src="https://assets.mixkit.co/sfx/preview/mixkit-ding-1481.mp3"
+      preload="auto"
+    ></audio>
+
+    <div class="mouse-tracer"></div>
+
+    <div class="click-effect"></div>
+
+    <div id="particles-js"></div>
+
+    <a href="home.html" class="back-button">← Back</a>
+
+    <nav>
+      <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="/aboutUs">About Us</a></li>
+        <li><a href="/codroidhub" target="_blank">CodroidHub</a></li>
+        <li><a href="/blogs">Blogs</a></li>
+        <li>
+          <a href="https://github.com/deepika123-gif" target="_blank">GitHub</a>
+        </li>
+        <li>
+          <a
+            href="https://www.linkedin.com/in/deepika-gondia-76120b276/"
+            target="_blank"
+            >LinkedIn</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <main>
+      <h1>Web Scraping Topics</h1>
+
+      <div class="subject-row">
+        <div class="subject-card">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/270/270798.png"
+            alt="BeautifulSoup Icon"
+          />
+          <h2>Books to scrape</h2>
+        </div>
+        <div class="description-card">
+          <p>
+            Learn how to parse HTML and XML documents using Python’s
+            BeautifulSoup library.
+          </p>
+          <a href="/scrape_1" onclick="handlePageTransition(event, this.href)"
+            >Learn More</a
+          >
+        </div>
+      </div>
+
+      <div class="subject-row">
+        <div class="subject-card">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/5968/5968292.png"
+            alt="Scrapy Icon"
+          />
+          <h2>Scrapy Framework</h2>
+        </div>
+        <div class="description-card">
+          <p>
+            Master the Scrapy framework for scalable and fast web crawling and
+            scraping.
+          </p>
+          <a href="#" onclick="handlePageTransition(event, this.href)"
+            >Learn More</a
+          >
+        </div>
+      </div>
+
+      <div class="subject-row">
+        <div class="subject-card">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/5968/5968672.png"
+            alt="Requests Icon"
+          />
+          <h2>Requests Library</h2>
+        </div>
+        <div class="description-card">
+          <p>
+            Understand how to send HTTP requests and handle responses with
+            Python Requests.
+          </p>
+          <a href="#" onclick="handlePageTransition(event, this.href)"
+            >Learn More</a
+          >
+        </div>
+      </div>
+
+      <div class="subject-row">
+        <div class="subject-card">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1067/1067561.png"
+            alt="Selenium Icon"
+          />
+          <h2>Selenium</h2>
+        </div>
+        <div class="description-card">
+          <p>
+            Automate browsers and scrape dynamic content using Selenium
+            WebDriver.
+          </p>
+          <a href="#" onclick="handlePageTransition(event, this.href)"
+            >Learn More</a
+          >
+        </div>
+      </div>
+
+      <div class="subject-row">
+        <div class="subject-card">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/2920/2920055.png"
+            alt="XPath Icon"
+          />
+          <h2>XPath Queries</h2>
+        </div>
+        <div class="description-card">
+          <p>Extract data precisely from HTML/XML using XPath expressions.</p>
+          <a href="#" onclick="handlePageTransition(event, this.href)"
+            >Learn More</a
+          >
+        </div>
+      </div>
+
+      <div class="subject-row">
+        <div class="subject-card">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/3194/3194979.png"
+            alt="APIs & JSON"
+          />
+          <h2>APIs & JSON</h2>
+        </div>
+        <div class="description-card">
+          <p>
+            Learn how to interact with web APIs and process JSON data
+            efficiently.
+          </p>
+          <a href="#" onclick="handlePageTransition(event, this.href)"
+            >Learn More</a
+          >
+        </div>
+      </div>
+    </main>
+    <div class="bottom-socials">
+      <a href="https://github.com/deepika123-gif" target="_blank"
+        ><i class="fab fa-github"></i
+      ></a>
+      <a
+        href="https://www.linkedin.com/in/deepika-gondia-76120b276/"
+        target="_blank"
+        ><i class="fab fa-linkedin"></i
+      ></a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+      particlesJS('particles-js', {
+        particles: {
+          number: { value: 80 },
+          size: { value: 3 },
+          move: { speed: 2 },
+          line_linked: { enable: true, distance: 150, color: '#00f7ff' },
+        },
+      });
+
+      const clickSound = document.getElementById('clickSound');
+      const mouseTracer = document.querySelector('.mouse-tracer');
+      const clickEffect = document.querySelector('.click-effect');
+      const body = document.body;
+      const interactiveElements = document.querySelectorAll(
+        'nav ul li, .subject-card, .description-card, .back-button, .bottom-socials a'
+      );
+
+      function handlePageTransition(event, url) {
+        event.preventDefault(); // Prevent the default link behavior
+        body.classList.add('page-transition'); // Add the new class for the animation
+
+        // Wait for the animation to complete, then navigate
+        setTimeout(() => {
+          window.location.href = url;
+        }, 500); // This duration should match your CSS transition time
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        mouseTracer.style.left = `${e.clientX}px`;
+        mouseTracer.style.top = `${e.clientY}px`;
+
+        const rotationY = (e.clientX - window.innerWidth / 2) * 0.005;
+        const rotationX = (e.clientY - window.innerHeight / 2) * -0.005;
+        body.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+        interactiveElements.forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          const elX = rect.left + rect.width / 2;
+          const elY = rect.top + rect.height / 2;
+          const dx = e.clientX - elX;
+          const dy = e.clientY - elY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            const force = (150 - distance) / 150;
+            const offsetX = -dx * force * 0.5;
+            const offsetY = -dy * force * 0.5;
+            el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+          } else {
+            el.style.transform = 'translate(0, 0)';
+          }
+        });
+      });
+
+      interactiveElements.forEach((el) => {
+        el.addEventListener('mouseleave', () => {
+          el.style.transform = 'translate(0, 0)';
+        });
+      });
+
+      window.addEventListener('click', (e) => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+
+        const newClick = document.createElement('div');
+        newClick.className = 'click-effect';
+        newClick.style.left = `${e.clientX}px`;
+        newClick.style.top = `${e.clientY}px`;
+        body.appendChild(newClick);
+        newClick.style.animation = 'explosion 0.5s forwards';
+        setTimeout(() => {
+          newClick.remove();
+        }, 500);
+      });
+    </script>
+  </body>
+</html>
