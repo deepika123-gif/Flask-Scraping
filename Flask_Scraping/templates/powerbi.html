@@ -6,25 +6,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
     <style>
-        * {margin: 0; padding: 0; box-sizing: border-box;}
+        /* ---------- Base Reset ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html, body { cursor: none; }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
-            overflow-x: hidden;
-            position: relative;
             background: #0a0a1a;
+            color: #fff;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
         }
 
-        /* ==== BACKGROUND PARTICLES LAYER ==== */
-        #particles-js {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, #0a0a1a, #1a1a30);
-        }
+        .page-transition { opacity: 0; transform: scale(0.7); }
 
+        /* ---------- Mouse Effects ---------- */
+        .cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000; mix-blend-mode: difference; }
+        .cursor-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #fff;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(255,255,255,.8), 0 0 18px rgba(77,219,255,.8);
+        }
+        .cursor-ring {
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.8);
+            transform: translate(-50%, -50%);
+            transition: width .18s ease, height .18s ease, border-color .18s ease, transform .08s ease;
+            box-shadow: 0 0 30px rgba(77,219,255,.55);
+        }
+        .cursor-hover .cursor-ring { width: 70px; height: 70px; border-color: #4ddbff; box-shadow: 0 0 40px rgba(255,102,255,.55), 0 0 60px rgba(77,219,255,.55); }
+        .cursor-hover .cursor-dot { box-shadow: 0 0 16px rgba(255,102,255,.9), 0 0 28px rgba(77,219,255,.9); }
+
+        .click-ripple {
+            position: fixed; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.9); transform: translate(-50%, -50%) scale(1);
+            opacity: 1; pointer-events: none; z-index: 999; mix-blend-mode: difference;
+            animation: ripple .5s ease-out forwards;
+        }
+        @keyframes ripple { to { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
+
+        .spark { position: fixed; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle, #fff, #4ddbff 60%, transparent 70%); pointer-events: none; z-index: 800; opacity: .95; mix-blend-mode: screen; transform: translate(-50%, -50%); animation: spark-fade .6s ease-out forwards; filter: blur(.2px); }
+        @keyframes spark-fade { to { transform: translate(-50%, -50%) translateY(-10px) scale(.6); opacity: 0; } }
+
+        /* ---------- Card Effects (Line-by-line) ---------- */
+        main { max-width: 900px; margin: auto; padding: 60px 20px 100px; padding-top: 110px; }
+        h1 {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 0 20px #ff66ff, 0 0 40px #4ddbff;
+        }
+        .subject-row {
+            display: block;
+            margin: 36px 0 46px;
+            text-align: center;
+            transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+            will-change: transform, box-shadow, filter;
+            transform-style: preserve-3d;
+        }
+        .subject-row:hover { transform: translateZ(0) scale(1.04); box-shadow: 0 0 25px rgba(77,219,255,0.55); filter: saturate(1.2); }
+        .magnet { perspective: 900px; }
+        .subject-card h2 { font-size: 28px; color: #4ddbff; text-shadow: 0 0 15px #4ddbff; margin-bottom: 14px; }
+        .description-card {
+            padding: 22px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+        }
+        .description-card p { color: #bbb; font-size: 16px; margin-bottom: 18px; line-height: 1.65; }
+        .btn-gradient {
+            --g1: #ff66ff; --g2: #4ddbff;
+            text-decoration: none; color: #fff; font-weight: 700;
+            background: linear-gradient(45deg, var(--g1), var(--g2));
+            padding: 11px 24px; border-radius: 999px; display: inline-block;
+            transition: transform .25s ease, box-shadow .25s ease;
+            box-shadow: 0 0 14px rgba(255,102,255,.45);
+            position: relative; overflow: hidden;
+        }
+        .btn-gradient:hover { transform: scale(1.08); box-shadow: 0 0 26px rgba(77,219,255,.8); }
+
+        /* Nav + Back Button */
         header {
             background: rgba(20, 20, 40, 0.7);
             padding: 15px 30px;
@@ -37,119 +103,16 @@
             top: 0;
             z-index: 10;
         }
-        header .logo {
-            font-weight: 800;
-            font-size: 20px;
-            color: #4ddbff;
-            text-shadow: 0 0 10px #00eaff;
-        }
-        header nav a {
-            margin-left: 20px;
-            text-decoration: none;
-            color: #ddd;
-            font-weight: 500;
-            transition: 0.3s;
-        }
+        header .logo { font-weight: 800; font-size: 20px; color: #4ddbff; text-shadow: 0 0 10px #00eaff; }
+        header nav a { margin-left: 20px; text-decoration: none; color: #ddd; font-weight: 500; transition: 0.3s; }
         header nav a:hover { color: #00f7ff; }
 
-        /* New Back Button Styles */
-        .back-btn {
-            background: linear-gradient(45deg, #ff00ff, #00eaff);
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 0 10px rgba(255,0,255,0.5);
-            margin-right: auto;
-        }
-        .back-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255,0,255,0.8);
-        }
+        .back-btn { background: linear-gradient(45deg, #ff00ff, #00eaff); padding: 8px 15px; border-radius: 5px; text-decoration: none; color: #fff; font-weight: 600; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 0 10px rgba(255,0,255,0.5); margin-right: auto; }
+        .back-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,0,255,0.8); }
 
-        main {
-            max-width: 1200px;
-            margin: auto;
-            padding: 60px 20px;
-            position: relative;
-            z-index: 1;
-        }
-        h1 {
-            text-align: center;
-            font-size: 42px;
-            margin-bottom: 60px;
-            background: linear-gradient(90deg, #00eaff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0,255,255,0.4);
-        }
-
-        .subject-row {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin-bottom: 80px;
-            position: relative;
-        }
-        .subject-row:nth-child(even) { flex-direction: row-reverse; }
-
-        .subject-card, .description-card {
-            flex: 1;
-            padding: 40px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        .subject-card:hover, .description-card:hover {
-            transform: translateY(-12px) rotateX(5deg) rotateY(-5deg);
-            box-shadow: 0 15px 40px rgba(0,255,255,0.4);
-        }
-
-        .subject-card h2 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #00eaff;
-            text-shadow: 0 0 15px #00f7ff;
-        }
-
-        .description-card p {
-            color: #bbb;
-            font-size: 16px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        .description-card a {
-            text-decoration: none;
-            color: #fff;
-            background: linear-gradient(45deg, #00C6FF, #0072FF);
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: 0.3s;
-            display: inline-block;
-            box-shadow: 0 0 15px rgba(0,114,255,0.5);
-        }
-        .description-card a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0,198,255,0.8);
-        }
-
-        .subject-row::after {
-            content: "";
-            position: absolute;
-            bottom: -40px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #00eaff, transparent);
-            opacity: 0.3;
-        }
-
+        /* Particles */
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, #0a0a1a, #1a1a30); }
+        
         @media(max-width: 900px) {
             .subject-row { flex-direction: column !important; }
         }
@@ -157,78 +120,159 @@
 </head>
 <body>
 
-<div id="particles-js"></div>
+    <div id="particles-js"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
 
-<header>
-    <a href="javascript:history.back()" class="back-btn">← Back</a>
-    <div class="logo">CodroidHub</div>
-    <nav>
-        <a href="home.html">Home</a>
-        <a href="/aboutUs">About Us</a>
-        <a href="/aboutCodroid" target="_blank">CodroidHub</a>
-        <a href="https://github.com/deepika123-gif" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/deepika-gondia-76120b276/" target="_blank">LinkedIn</a>
-        <a href="/blogs">Blogs</a>
-    </nav>
-</header>
+    <header>
+        <a href="javascript:history.back()" class="back-btn" onclick="handlePageTransition(event, this.href)">← Back</a>
+        <div class="logo">CodroidHub</div>
+        <nav>
+            <a href="home.html" onclick="handlePageTransition(event, this.href)">Home</a>
+            <a href="/aboutUs" onclick="handlePageTransition(event, this.href)">About Us</a>
+            <a href="/aboutCodroid" target="_blank">CodroidHub</a>
+            <a href="https://github.com/deepika123-gif" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/deepika-gondia-76120b276/" target="_blank">LinkedIn</a>
+            <a href="/blogs" onclick="handlePageTransition(event, this.href)">Blogs</a>
+        </nav>
+    </header>
 
-<main>
-    <h1>Dashboards</h1>
+    <main>
+        <h1>Dashboards</h1>
 
-    <div class="subject-row">
-        <div class="subject-card" onclick="window.location.href='static/IRIS.png';">
-            <h2>🌸 IRIS</h2>
+        <div class="subject-row magnet">
+            <div class="subject-card"><h2> IRIS</h2></div>
+            <div class="description-card">
+                <p>The IRIS dataset includes three iris species with 50 samples each. It’s often used to demonstrate classification problems, as one species is linearly separable while the other two overlap.</p>
+                <a class="btn-gradient" href="/iris_dashboard" onclick="handlePageTransition(event, this.href)">Learn More</a>
+            </div>
         </div>
-        <div class="description-card">
-            <p>The IRIS dataset includes three iris species with 50 samples each. It’s often used to demonstrate classification problems, as one species is linearly separable while the other two overlap.</p>
-            <a href="/iris_dashboard">Learn More</a>
-        </div>
-    </div>
 
-    <div class="subject-row">
-        <div class="subject-card" onclick="window.location.href='static/TITANIC.png';">
-            <h2>🚢 TITANIC</h2>
+        <div class="subject-row magnet">
+            <div class="subject-card"><h2> TITANIC</h2></div>
+            <div class="description-card">
+                <p>The Titanic dataset is a classic machine learning dataset used to predict survival chances of passengers based on age, class, gender and more.</p>
+                <a class="btn-gradient" href="/titanic_deshboard" onclick="handlePageTransition(event, this.href)">Learn More</a>
+            </div>
         </div>
-        <div class="description-card">
-            <p>The Titanic dataset is a classic machine learning dataset used to predict survival chances of passengers based on age, class, gender and more.</p>
-            <a href="/titanic_deshboard">Learn More</a>
-        </div>
-    </div>
 
-    <div class="subject-row">
-        <div class="subject-card" onclick="window.location.href='static/hr analytics.png';">
-            <h2>👩‍💼 HR Analytics</h2>
+        <div class="subject-row magnet">
+            <div class="subject-card"><h2> HR Analytics</h2></div>
+            <div class="description-card">
+                <p>The HR Analytics dataset helps companies predict employee attrition. It explores satisfaction, performance, promotions and salary to understand workforce trends.</p>
+                <a class="btn-gradient" href="/hr_deshboard" onclick="handlePageTransition(event, this.href)">Learn More</a>
+            </div>
         </div>
-        <div class="description-card">
-            <p>The HR Analytics dataset helps companies predict employee attrition. It explores satisfaction, performance, promotions and salary to understand workforce trends.</p>
-            <a href="/hr_deshboard">Learn More</a>
+
+        <div class="subject-row magnet">
+            <div class="subject-card"><h2>SuperStore Sales</h2></div>
+            <div class="description-card">
+                <p>The Superstore sales dataset contains information on customer orders, including product categories, sales, profit, discounts, and shipping details, used for analyzing retail business performance.</p>
+                <a class="btn-gradient" href="/superstore_sales_dashboard" onclick="handlePageTransition(event, this.href)">Learn More</a>
+            </div>
         </div>
-    </div>
 
-</main>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
-<script>
-particlesJS("particles-js", {
-    "particles": {
-        "number": { "value": 90 },
-        "color": { "value": "#00eaff" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.5 },
-        "size": { "value": 3 },
-        "line_linked": {
-            "enable": true,
-            "distance": 150,
-            "color": "#00eaff",
-            "opacity": 0.3,
-            "width": 1
-        },
-        "move": { "enable": true, "speed": 3 }
-    },
-    "interactivity": {
-        "events": { "onhover": { "enable": true, "mode": "repulse" } }
-    }
-});
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 90 },
+                "color": { "value": "#00eaff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#00eaff",
+                    "opacity": 0.3,
+                    "width": 1
+                },
+                "move": { "enable": true, "speed": 3 }
+            },
+            "interactivity": {
+                "events": { "onhover": { "enable": true, "mode": "repulse" } }
+            }
+        });
+        
+        function handlePageTransition(event, url) {
+            event.preventDefault();
+            document.body.classList.add('page-transition');
+            setTimeout(() => { window.location.href = url; }, 400);
+        }
+
+        (function() {
+            const dot = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+            let ringX = mouseX, ringY = mouseY;
+
+            function raf() {
+                ringX += (mouseX - ringX) * 0.18;
+                ringY += (mouseY - ringY) * 0.18;
+                dot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
+                ring.style.transform = `translate(${ringX - ring.offsetWidth/2}px, ${ringY - ring.offsetHeight/2}px)`;
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX; mouseY = e.clientY;
+                if (Math.random() < 0.18) makeSpark(e.clientX, e.clientY);
+            }, { passive: true });
+
+            window.addEventListener('mousedown', (e) => {
+                const rip = document.createElement('span');
+                rip.className = 'click-ripple';
+                rip.style.left = e.clientX + 'px';
+                rip.style.top = e.clientY + 'px';
+                document.body.appendChild(rip);
+                setTimeout(() => rip.remove(), 520);
+            });
+
+            const interactive = ['a', 'button', '.btn-gradient', '.subject-row', 'nav a', '.back-btn'];
+            function setHover(on) {
+                document.documentElement.classList.toggle('cursor-hover', !!on);
+            }
+            document.addEventListener('mouseover', (e) => {
+                if (interactive.some(sel => e.target.closest(sel))) setHover(true);
+            });
+            document.addEventListener('mouseout', (e) => {
+                if (interactive.some(sel => e.target.matches(sel))) setHover(false);
+            });
+
+            function makeSpark(x, y) {
+                const s = document.createElement('i');
+                s.className = 'spark';
+                s.style.left = x + 'px';
+                s.style.top = y + 'px';
+                const size = 4 + Math.random() * 6;
+                s.style.width = size + 'px';
+                s.style.height = size + 'px';
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 650);
+            }
+        })();
+
+        (function() {
+            const magnets = document.querySelectorAll('.magnet');
+            const strength = 18;
+            magnets.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+                    const dx = (e.clientX - cx) / rect.width;
+                    const dy = (e.clientY - cy) / rect.height;
+                    card.style.transform = `rotateY(${dx * strength}deg) rotateX(${ -dy * strength }deg) scale(1.04)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+        })();
+    </script>
 </body>
 </html>

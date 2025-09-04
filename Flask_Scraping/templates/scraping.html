@@ -3,173 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web Scraping - CodroidHub</title>
+    <title>Web Scraping - CodroidHub (Unique Mouse)</title>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-        cursor: none;
-      }
+      /* ---------- Base Reset ---------- */
+      * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+      /* Hide default cursor globally */
+      html, body { cursor: none; }
 
       body {
-        height: 100vh;
         background: #0a0a1a;
-        color: white;
+        color: #fff;
         overflow-y: scroll;
         overflow-x: hidden;
-        transition: transform 0.2s ease-out;
-        perspective: 1000px;
-        /* New: for page transition */
         transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
       }
 
-      .page-transition {
-        opacity: 0;
-        transform: scale(0.5);
-      }
+      .page-transition { opacity: 0; transform: scale(0.7); }
 
-      /* Mouse Tracer Effect */
-      .mouse-tracer {
-        position: fixed;
-        width: 15px;
-        height: 15px;
-        background: radial-gradient(circle, #ff66ff, #4ddbff);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 1000;
-        opacity: 0.8;
-        filter: blur(5px);
-        transform: translate(-50%, -50%);
-        transition: transform 0.05s ease-out;
-      }
-
-      /* Click Explosion Effect */
-      .click-effect {
-        position: fixed;
-        width: 50px;
-        height: 50px;
-        background: radial-gradient(circle, hwb(192 30% 0%) 30% 0%), #ff66ff,
-          transparent);
-        border-radius: 50%;
-        opacity: 0;
-        transform: scale(0);
-        pointer-events: none;
-        z-index: 1001;
-      }
-
-      /* Animation for click effect */
-      @keyframes explosion {
-        0% {
-          transform: scale(0);
-          opacity: 1;
-        }
-        50% {
-          transform: scale(1.5);
-          opacity: 0.8;
-        }
-        100% {
-          transform: scale(2);
-          opacity: 0;
-        }
-      }
-
-      /* Particle background */
-      #particles-js {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-      }
-
-      /* Navigation */
-      nav {
-        position: absolute;
-        top: 20px;
-        right: 40px;
-      }
-
-      nav ul {
-        list-style: none;
-        display: flex;
-        gap: 15px;
-      }
-
-      nav ul li {
-        cursor: pointer;
-        font-weight: 500;
-        transition: 0.3s;
-        padding: 8px 15px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 5px;
-        transform-style: preserve-3d;
-        transform: translateZ(0);
-      }
-
-      nav ul li a {
-        color: #ccc;
-        text-decoration: none;
-        font-weight: bold;
-      }
-
-      nav ul li:hover {
-        color: #fff;
-        text-shadow: 0 0 10px #4ddbff;
-        background: rgba(77, 219, 255, 0.2);
-        border-color: #4ddbff;
-      }
-
-      nav ul li:hover a {
-        color: #fff;
-      }
-
-      /* Back Button */
-      .back-button {
-        position: absolute;
-        top: 20px;
-        left: 30px;
-        padding: 8px 15px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        border-radius: 5px;
-        background: rgba(77, 219, 255, 0.2);
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-        transition: 0.3s;
-        cursor: pointer;
-        z-index: 10;
-        backdrop-filter: blur(5px);
-      }
-
-      .back-button:hover {
-        color: #fff;
-        text-shadow: 0 0 10px #4ddbff;
-        background: rgba(77, 219, 255, 0.4);
-        border-color: #4ddbff;
-      }
-
-      /* Main content */
-      main {
-        max-width: 1200px;
-        margin: auto;
-        padding: 60px 20px;
-        position: relative;
-        z-index: 1;
-        padding-top: 100px;
-      }
+      main { max-width: 900px; margin: auto; padding: 60px 20px 100px; padding-top: 110px; }
 
       h1 {
         text-align: center;
@@ -179,133 +35,115 @@
         text-shadow: 0 0 20px #ff66ff, 0 0 40px #4ddbff;
       }
 
-      /* New styles for alternating rows */
+      /* ---------- Line-wise Cards ---------- */
       .subject-row {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-        margin-bottom: 80px;
-        position: relative;
-      }
-
-      .subject-row:nth-child(even) {
-        flex-direction: row-reverse;
-      }
-
-      .subject-card,
-      .description-card {
-        flex: 1;
-        padding: 40px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-      }
-
-      .subject-card:hover,
-      .description-card:hover {
-        transform: translateY(-12px) rotateX(5deg) rotateY(-5deg);
-        box-shadow: 0 15px 40px rgba(0, 255, 255, 0.4);
-      }
-
-      .subject-card {
+        display: block;
+        margin: 36px 0 46px;
         text-align: center;
+        transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+        will-change: transform, box-shadow, filter;
+        transform-style: preserve-3d;
       }
 
-      .subject-card img {
-        width: 70px;
-        margin-bottom: 15px;
-        filter: invert(1);
+      /* Hover zoom + glow (also responds to magnetic tilt below) */
+      .subject-row:hover { transform: translateZ(0) scale(1.04); box-shadow: 0 0 25px rgba(77,219,255,0.55); filter: saturate(1.2); }
+
+      .subject-card h2 { font-size: 28px; color: #4ddbff; text-shadow: 0 0 15px #4ddbff; margin-bottom: 14px; }
+
+      .description-card {
+        padding: 22px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.35);
       }
 
-      .subject-card h2 {
-        font-size: 28px;
-        color: #4ddbff;
-        text-shadow: 0 0 15px #4ddbff;
+      .description-card p { color: #bbb; font-size: 16px; margin-bottom: 18px; line-height: 1.65; }
+
+      .btn-gradient {
+        --g1: #ff66ff; --g2: #4ddbff;
+        text-decoration: none; color: #fff; font-weight: 700;
+        background: linear-gradient(45deg, var(--g1), var(--g2));
+        padding: 11px 24px; border-radius: 999px; display: inline-block;
+        transition: transform .25s ease, box-shadow .25s ease;
+        box-shadow: 0 0 14px rgba(255,102,255,.45);
+        position: relative; overflow: hidden;
+      }
+      .btn-gradient:hover { transform: scale(1.08); box-shadow: 0 0 26px rgba(77,219,255,.8); }
+
+      /* ---------- Nav + Back ---------- */
+      nav { position: absolute; top: 20px; right: 40px; }
+      nav ul { list-style: none; display: flex; gap: 16px; }
+      nav ul li a { color: #ccc; text-decoration: none; font-weight: 700; }
+      nav ul li a:hover { color: #fff; }
+
+      .back-button {
+        position: absolute; top: 20px; left: 30px; padding: 8px 15px;
+        border: 1px solid rgba(255,255,255,0.4); border-radius: 8px;
+        background: rgba(77,219,255,0.18); color: #fff; text-decoration: none; font-weight: 700;
       }
 
-      .description-card p {
-        color: #bbb;
-        font-size: 16px;
-        margin-bottom: 20px;
-        line-height: 1.6;
+      .bottom-socials { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; gap: 20px; z-index: 90; }
+      .bottom-socials a { font-size: 28px; color: white; transition: 0.3s; text-decoration: none; }
+      .bottom-socials a:hover { color: #4ddbff; transform: scale(1.18); }
+
+      /* ---------- UNIQUE CURSOR SYSTEM ---------- */
+      /* 1) Dot (fast) + Ring (smooth) with blend for neon look */
+      .cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000; mix-blend-mode: difference; }
+
+      .cursor-dot {
+        width: 8px; height: 8px; border-radius: 50%; background: #fff;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 10px rgba(255,255,255,.8), 0 0 18px rgba(77,219,255,.8);
       }
 
-      .description-card a {
-        text-decoration: none;
-        color: #fff;
-        background: linear-gradient(45deg, #ff66ff, #4ddbff);
-        padding: 12px 25px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: 0.3s;
-        display: inline-block;
-        box-shadow: 0 0 15px rgba(255, 102, 255, 0.5);
+      .cursor-ring {
+        width: 42px; height: 42px; border-radius: 50%;
+        border: 2px solid rgba(255,255,255,.8);
+        transform: translate(-50%, -50%);
+        transition: width .18s ease, height .18s ease, border-color .18s ease, transform .08s ease;
+        box-shadow: 0 0 30px rgba(77,219,255,.55);
       }
 
-      .description-card a:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(77, 219, 255, 0.8);
+      /* Hover state over interactive elements */
+      .cursor-hover .cursor-ring { width: 70px; height: 70px; border-color: #4ddbff; box-shadow: 0 0 40px rgba(255,102,255,.55), 0 0 60px rgba(77,219,255,.55); }
+      .cursor-hover .cursor-dot { box-shadow: 0 0 16px rgba(255,102,255,.9), 0 0 28px rgba(77,219,255,.9); }
+
+      /* 2) Click ripple pulse */
+      .click-ripple {
+        position: fixed; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%;
+        border: 2px solid rgba(255,255,255,.9); transform: translate(-50%, -50%) scale(1);
+        opacity: 1; pointer-events: none; z-index: 999; mix-blend-mode: difference;
+        animation: ripple .5s ease-out forwards;
+      }
+      @keyframes ripple { to { transform: translate(-50%, -50%) scale(6); opacity: 0; } }
+
+      /* 3) Magnetic tilt for subject rows */
+      .magnet {
+        perspective: 900px;
       }
 
-      .subject-row::after {
-        content: '';
-        position: absolute;
-        bottom: -40px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #4ddbff, transparent);
-        opacity: 0.3;
+      /* 4) Subtle trailing sparkles (created with JS, styled here) */
+      .spark {
+        position: fixed; width: 6px; height: 6px; border-radius: 50%;
+        background: radial-gradient(circle, #fff, #4ddbff 60%, transparent 70%);
+        pointer-events: none; z-index: 800; opacity: .95; mix-blend-mode: screen;
+        transform: translate(-50%, -50%);
+        animation: spark-fade .6s ease-out forwards;
+        filter: blur(.2px);
       }
+      @keyframes spark-fade { to { transform: translate(-50%, -50%) translateY(-10px) scale(.6); opacity: 0; } }
 
-      @media (max-width: 900px) {
-        .subject-row {
-          flex-direction: column !important;
-        }
-      }
-      /* New styling for bottom-left socials */
-      .bottom-socials {
-        position: fixed;
-        bottom: 30px;
-        left: 30px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        z-index: 999;
-      }
-
-      .bottom-socials a {
-        font-size: 28px;
-        color: white;
-        transition: 0.3s;
-        text-decoration: none;
-        text-shadow: 0 0 10px rgba(77, 219, 255, 0.5);
-      }
-
-      .bottom-socials a:hover {
-        color: #4ddbff;
-        transform: scale(1.2);
-        text-shadow: 0 0 20px #4ddbff;
+      /* Improve accessibility for users who prefer reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .cursor-ring, .cursor-dot, .spark { transition: none !important; animation: none !important; }
+        .subject-row, .btn-gradient { transition: none !important; }
       }
     </style>
   </head>
   <body>
-    <audio
-      id="clickSound"
-      src="https://assets.mixkit.co/sfx/preview/mixkit-ding-1481.mp3"
-      preload="auto"
-    ></audio>
-
-    <div class="mouse-tracer"></div>
-
-    <div class="click-effect"></div>
-
-    <div id="particles-js"></div>
-
-    <a href="home.html" class="back-button">← Back</a>
+    <a href="/explore" class="back-button">← Back</a>
 
     <nav>
       <ul>
@@ -313,220 +151,149 @@
         <li><a href="/aboutUs">About Us</a></li>
         <li><a href="/codroidhub" target="_blank">CodroidHub</a></li>
         <li><a href="/blogs">Blogs</a></li>
-        <li>
-          <a href="https://github.com/deepika123-gif" target="_blank">GitHub</a>
-        </li>
-        <li>
-          <a
-            href="https://www.linkedin.com/in/deepika-gondia-76120b276/"
-            target="_blank"
-            >LinkedIn</a
-          >
-        </li>
       </ul>
     </nav>
 
     <main>
       <h1>Web Scraping Topics</h1>
 
-      <div class="subject-row">
-        <div class="subject-card">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/270/270798.png"
-            alt="BeautifulSoup Icon"
-          />
-          <h2>Books to scrape</h2>
-        </div>
+      <div class="subject-row magnet">
+        <div class="subject-card"><h2>Books to Scrape</h2></div>
         <div class="description-card">
-          <p>
-            Learn how to parse HTML and XML documents using Python’s
-            BeautifulSoup library.
-          </p>
-          <a href="/scrape_1" onclick="handlePageTransition(event, this.href)"
-            >Learn More</a
-          >
+          <p>“Books to Scrape” is a sandbox website designed specifically for practice—it simulates a fictional bookstore with 1,000 book listings.</p>
+          <a class="btn-gradient" href="/scrape_1" onclick="handlePageTransition(event, this.href)">Learn More</a>
         </div>
       </div>
 
-      <div class="subject-row">
-        <div class="subject-card">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/5968/5968292.png"
-            alt="Scrapy Icon"
-          />
-          <h2>Scrapy Framework</h2>
-        </div>
+      <div class="subject-row magnet">
+        <div class="subject-card"><h2>Quotes to Scrape</h2></div>
         <div class="description-card">
-          <p>
-            Master the Scrapy framework for scalable and fast web crawling and
-            scraping.
-          </p>
-          <a href="#" onclick="handlePageTransition(event, this.href)"
-            >Learn More</a
-          >
+          <p>Quotes to Scrape is a free sandbox site with quotes from famous authors—great for learning pagination, tags, and scraping.</p>
+          <a class="btn-gradient" href="/scrape_2" onclick="handlePageTransition(event, this.href)">Learn More</a>
         </div>
       </div>
 
-      <div class="subject-row">
-        <div class="subject-card">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/5968/5968672.png"
-            alt="Requests Icon"
-          />
-          <h2>Requests Library</h2>
-        </div>
+      <div class="subject-row magnet">
+        <div class="subject-card"><h2>Goodreads</h2></div>
         <div class="description-card">
-          <p>
-            Understand how to send HTTP requests and handle responses with
-            Python Requests.
-          </p>
-          <a href="#" onclick="handlePageTransition(event, this.href)"
-            >Learn More</a
-          >
+          <p>Goodreads is the world’s largest online platform for book lovers, designed to help users discover new reads and share reviews.</p>
+          <a class="btn-gradient" href="/scrape_3" onclick="handlePageTransition(event, this.href)">Learn More</a>
         </div>
       </div>
 
-      <div class="subject-row">
-        <div class="subject-card">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/1067/1067561.png"
-            alt="Selenium Icon"
-          />
-          <h2>Selenium</h2>
-        </div>
+      <div class="subject-row magnet">
+        <div class="subject-card"><h2>Flipkart</h2></div>
         <div class="description-card">
-          <p>
-            Automate browsers and scrape dynamic content using Selenium
-            WebDriver.
-          </p>
-          <a href="#" onclick="handlePageTransition(event, this.href)"
-            >Learn More</a
-          >
+          <p>Flipkart is one of India’s leading e-commerce platforms, offering a wide range of products including electronics, fashion, home essentials, and more. It is especially popular for its competitive pricing and massive online sales events.</p>
+          <a class="btn-gradient" href="/scrape_4" onclick="handlePageTransition(event, this.href)">Learn More</a>
         </div>
       </div>
 
-      <div class="subject-row">
-        <div class="subject-card">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/2920/2920055.png"
-            alt="XPath Icon"
-          />
-          <h2>XPath Queries</h2>
-        </div>
+      <div class="subject-row magnet">
+        <div class="subject-card"><h2>Ambala College of Engineering and Applied Reseach</h2></div>
         <div class="description-card">
-          <p>Extract data precisely from HTML/XML using XPath expressions.</p>
-          <a href="#" onclick="handlePageTransition(event, this.href)"
-            >Learn More</a
-          >
-        </div>
-      </div>
-
-      <div class="subject-row">
-        <div class="subject-card">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/3194/3194979.png"
-            alt="APIs & JSON"
-          />
-          <h2>APIs & JSON</h2>
-        </div>
-        <div class="description-card">
-          <p>
-            Learn how to interact with web APIs and process JSON data
-            efficiently.
-          </p>
-          <a href="#" onclick="handlePageTransition(event, this.href)"
-            >Learn More</a
-          >
+          <p>Ambala College of Engineering and Applied Research (ACE) is a private engineering institute in Ambala, Haryana, established in 2002, affiliated with Kurukshetra University and approved by AICTE, offering UG and PG programs in disciplines like Mechanical, ECE, CSE, Biotechnology, and Robotics Engineering</p>
+          <a class="btn-gradient" href="/scrape_3" onclick="handlePageTransition(event, this.href)">Learn More</a>
         </div>
       </div>
     </main>
+
     <div class="bottom-socials">
-      <a href="https://github.com/deepika123-gif" target="_blank"
-        ><i class="fab fa-github"></i
-      ></a>
-      <a
-        href="https://www.linkedin.com/in/deepika-gondia-76120b276/"
-        target="_blank"
-        ><i class="fab fa-linkedin"></i
-      ></a>
+      <a href="https://github.com/deepika123-gif" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/deepika-gondia-76120b276/" target="_blank"><i class="fab fa-linkedin"></i></a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Unique Cursor Elements -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
     <script>
-      particlesJS('particles-js', {
-        particles: {
-          number: { value: 80 },
-          size: { value: 3 },
-          move: { speed: 2 },
-          line_linked: { enable: true, distance: 150, color: '#00f7ff' },
-        },
-      });
-
-      const clickSound = document.getElementById('clickSound');
-      const mouseTracer = document.querySelector('.mouse-tracer');
-      const clickEffect = document.querySelector('.click-effect');
-      const body = document.body;
-      const interactiveElements = document.querySelectorAll(
-        'nav ul li, .subject-card, .description-card, .back-button, .bottom-socials a'
-      );
-
+      /* ------------------ Page Transition (kept) ------------------ */
       function handlePageTransition(event, url) {
-        event.preventDefault(); // Prevent the default link behavior
-        body.classList.add('page-transition'); // Add the new class for the animation
-
-        // Wait for the animation to complete, then navigate
-        setTimeout(() => {
-          window.location.href = url;
-        }, 500); // This duration should match your CSS transition time
+        event.preventDefault();
+        document.body.classList.add('page-transition');
+        setTimeout(() => { window.location.href = url; }, 400);
       }
 
-      window.addEventListener('mousemove', (e) => {
-        mouseTracer.style.left = `${e.clientX}px`;
-        mouseTracer.style.top = `${e.clientY}px`;
+      /* ------------------ UNIQUE CURSOR SCRIPT ------------------ */
+      (function() {
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let ringX = mouseX, ringY = mouseY;
 
-        const rotationY = (e.clientX - window.innerWidth / 2) * 0.005;
-        const rotationX = (e.clientY - window.innerHeight / 2) * -0.005;
-        body.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        // Smooth the ring movement
+        function raf() {
+          ringX += (mouseX - ringX) * 0.18;  // ease factor
+          ringY += (mouseY - ringY) * 0.18;
+          dot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`; // 8px dot
+          ring.style.transform = `translate(${ringX - ring.offsetWidth/2}px, ${ringY - ring.offsetHeight/2}px)`;
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
 
-        interactiveElements.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          const elX = rect.left + rect.width / 2;
-          const elY = rect.top + rect.height / 2;
-          const dx = e.clientX - elX;
-          const dy = e.clientY - elY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+        // Track mouse
+        window.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX; mouseY = e.clientY;
+          // spawn a tiny sparkle sometimes
+          if (Math.random() < 0.18) makeSpark(e.clientX, e.clientY);
+        }, { passive: true });
 
-          if (distance < 150) {
-            const force = (150 - distance) / 150;
-            const offsetX = -dx * force * 0.5;
-            const offsetY = -dy * force * 0.5;
-            el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-          } else {
-            el.style.transform = 'translate(0, 0)';
-          }
+        // Ripple on click
+        window.addEventListener('mousedown', (e) => {
+          const rip = document.createElement('span');
+          rip.className = 'click-ripple';
+          rip.style.left = e.clientX + 'px';
+          rip.style.top = e.clientY + 'px';
+          document.body.appendChild(rip);
+          setTimeout(() => rip.remove(), 520);
         });
-      });
 
-      interactiveElements.forEach((el) => {
-        el.addEventListener('mouseleave', () => {
-          el.style.transform = 'translate(0, 0)';
+        // Hover detection for interactive elements
+        const interactive = ['a', 'button', '.btn-gradient', '.subject-row', 'nav a', '.back-button'];
+        function setHover(on) {
+          document.documentElement.classList.toggle('cursor-hover', !!on);
+        }
+        document.addEventListener('mouseover', (e) => {
+          if (interactive.some(sel => e.target.closest(sel))) setHover(true);
         });
-      });
+        document.addEventListener('mouseout', (e) => {
+          if (interactive.some(sel => e.target.matches(sel))) setHover(false);
+        });
 
-      window.addEventListener('click', (e) => {
-        clickSound.currentTime = 0;
-        clickSound.play();
+        // Sparkles
+        function makeSpark(x, y) {
+          const s = document.createElement('i');
+          s.className = 'spark';
+          s.style.left = x + 'px';
+          s.style.top = y + 'px';
+          const size = 4 + Math.random() * 6;
+          s.style.width = size + 'px';
+          s.style.height = size + 'px';
+          document.body.appendChild(s);
+          setTimeout(() => s.remove(), 650);
+        }
+      })();
 
-        const newClick = document.createElement('div');
-        newClick.className = 'click-effect';
-        newClick.style.left = `${e.clientX}px`;
-        newClick.style.top = `${e.clientY}px`;
-        body.appendChild(newClick);
-        newClick.style.animation = 'explosion 0.5s forwards';
-        setTimeout(() => {
-          newClick.remove();
-        }, 500);
-      });
+      /* ------------------ MAGNETIC TILT FOR CARDS ------------------ */
+      (function() {
+        const magnets = document.querySelectorAll('.magnet');
+        const strength = 18; // higher = stronger tilt
+
+        magnets.forEach(card => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / rect.width;  // -0.5 .. 0.5
+            const dy = (e.clientY - cy) / rect.height; // -0.5 .. 0.5
+            card.style.transform = `rotateY(${dx * strength}deg) rotateX(${ -dy * strength }deg) scale(1.04)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+          });
+        });
+      })();
     </script>
   </body>
 </html>

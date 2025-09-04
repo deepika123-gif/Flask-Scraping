@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bar Chart</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #0a0a1a;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        position: relative;
+      }
+      .container {
+        max-width: 900px;
+        width: 100%;
+        text-align: center;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        background: rgba(77, 219, 255, 0.2);
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+      }
+
+      .back-button:hover {
+        color: #fff;
+        text-shadow: 0 0 10px #4ddbff;
+        background: rgba(77, 219, 255, 0.4);
+        border-color: #4ddbff;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/scrape_4" class="back-button">← Back</a>
+    <div class="container">
+      <img src="{{ chart_url}}" alt="data" />
+    </div>
+  </body>
+</html>

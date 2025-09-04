@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scraped Data</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #0a0a1a;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        position: relative; /* For positioning the back button */
+      }
+      .container {
+        max-width: 900px;
+        width: 100%;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+      th {
+        background: rgba(77, 219, 255, 0.2);
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #4ddbff;
+        text-shadow: 0 0 10px #4ddbff;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .button-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
+      .button-container a {
+        text-decoration: none;
+        color: #fff;
+        background: linear-gradient(45deg, #ff66ff, #4ddbff);
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: inline-block;
+        box-shadow: 0 0 15px rgba(255, 102, 255, 0.5);
+      }
+      .button-container a:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(77, 219, 255, 0.8);
+      }
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+        background: rgba(77, 219, 255, 0.2);
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 10;
+        backdrop-filter: blur(5px);
+      }
+      .back-button:hover {
+        color: #fff;
+        text-shadow: 0 0 10px #4ddbff;
+        background: rgba(77, 219, 255, 0.4);
+        border-color: #4ddbff;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/scraping" class="back-button">← Back</a>
+    <div class="container">
+      {{ table | safe}}
+      <div class="button-container">
+        <a href="/bar_chart_3">bar chart</a>
+        <a href="/pie_chart_3">pie chart</a>
+      </div>
+    </div>
+  </body>
+</html>
